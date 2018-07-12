@@ -42,7 +42,7 @@ def medical_check(input_text):
     input_text = preprocessing(input_text)
     input_text=list(input_text.split())
     for i in range(len(input_text)):
-        if input_text[i].lower() in ['medical', 'records', 'diabetes', 'sugar level']:
+        if input_text[i].lower() in ['medical', 'records', 'diabetes', 'sugar level', 'med']:
             return True
     return False
 
@@ -58,6 +58,20 @@ def get_bot_response(input_text):
         elif input_text == "update":
             UpdateRecordsFlag = True
             return "Tell me your sugar level"
+
+    if UpdateRecordsFlag:
+        UpdateRecordsFlag = False
+        try:
+            value = float(input_text)
+            if value < 0 or value > 20:
+                raise ValueError
+            if  value > 6.0 and  value < 4.0:
+                return "Value saved.You are at: MEDIUM risk. Consult a medical professional."
+            elif value>=11.0 or value<=2.8:
+                return "Value saved.You are at: HIGH risk. Please seek medical attention."
+            return "Value saved.You are at: NO risk. Keep it up!"
+        except:
+            return "Ermm I don't understand, please enter a valid value"
         
     if greeting_check(input_text):
         greeting_file=open("Greetings.txt", "r")
@@ -106,11 +120,10 @@ def form():
         db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (request.form['text'], time.time(), "user", ))
         
         if UpdateRecordsFlag:
-            now = datetime.datetime.now()
-            date = now.day + now.month + now.year #fix date
+            now = datetime.datetime.today()
+            date = now.strftime("%d") + "/" + now.strftime("%B") + "/" + now.strftime("%Y")
             db.execute('INSERT INTO medicalrecords (timestamp, sugarlvl) VALUES (?,?)' , (date, request.form['text']))
             db.commit()
-            UpdateRecordsFlag = False
             MedicalFlag = False
             
         db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (get_bot_response(request.form['text']), time.time(), "bot", ))
@@ -119,13 +132,11 @@ def form():
         if RetrieveRecordsFlag:
             medrecords = db.execute('SELECT * FROM medicalrecords').fetchall()
             for rec in medrecords:
-                text = str(rec["timestamp"]) + " " + str(rec["sugarlvl"])  
+                text = str(rec["timestamp"]) + ": " + str(rec["sugarlvl"]) + "mmol/L"
                 db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (text, time.time(), "bot", ))
                 db.commit()
             RetrieveRecordsFlag = False
             MedicalFlag = False
-            
-        
         records = db.execute('SELECT * FROM chatbot').fetchall()
         db.close()
         return render_template('form.html', chat = records)

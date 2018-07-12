@@ -32,9 +32,14 @@
       <form class="chat-form" action="{{ url_for('form') }}" method="POST">
         <input id="textInput" type="text" name="text" placeholder="Message">
         <input id="buttonInput" type="submit" value="Send">
-    </div>
+      </div>
       </form>
  
     </div>
+  <script>
+  var chatbox = document.querySelector(".chatlogs");
+
+  chatbox.scrollTop = chatbox.scrollHeight;</script>
   </body>
 </html>
+
