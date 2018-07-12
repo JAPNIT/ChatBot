@@ -5,7 +5,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 import nltk, string, random
 
 global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
-MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag = False, False, False
+MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag = False, False, False, False
 app = Flask(__name__)
 
 def preprocessing(input_text):
@@ -47,7 +47,7 @@ def medical_check(input_text):
     return False
 
 def get_bot_response(input_text):
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
     if medical_check(input_text): #function
         MedicalFlag = True
         return "Do you want to retrieve existing or update?"
@@ -66,12 +66,17 @@ def get_bot_response(input_text):
             if value < 0 or value > 20:
                 raise ValueError
             if  value > 6.0 and  value < 4.0:
-                return "Value saved.You are at: MEDIUM risk. Consult a medical professional."
+                ReminderFlag = True
+                return "Value saved.You are at: MEDIUM risk. Consult a medical professional. One of the ways to fight high sugar level is to drink appropriate amounts of water. Do you want me to remind you to do so?"
             elif value>=11.0 or value<=2.8:
-                return "Value saved.You are at: HIGH risk. Please seek medical attention."
+                ReminderFlag = True
+                return "Value saved.You are at: HIGH risk. Please seek medical attention.One of the ways to fight high sugar level is to drink appropriate amounts of water. Do you want me to remind you to do so?"
             return "Value saved.You are at: NO risk. Keep it up!"
         except:
             return "Ermm I don't understand, please enter a valid value"
+
+    if ReminderFlag:
+        
         
     if greeting_check(input_text):
         greeting_file=open("Greetings.txt", "r")
@@ -82,19 +87,6 @@ def get_bot_response(input_text):
         return random.choice(lst_greet)
     else:
         return "I don't understand"
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def create_db():
     db = get_db()
@@ -114,7 +106,7 @@ if not os.path.isfile('db.sqlite3'):
 
 @app.route('/form', methods=['GET','POST'])
 def form():
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
     if request.method == 'POST':
         db = get_db()
         db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (request.form['text'], time.time(), "user", ))

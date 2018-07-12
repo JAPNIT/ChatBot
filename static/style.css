@@ -16,6 +16,7 @@ body {
     background: #fff;
     padding: 25px;
     margin: 20px auto;
+    display:flex;
     box-shadow: 0 3px #ccc;
 }
 
