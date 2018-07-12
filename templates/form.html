@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/style1.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
     <div>
-      <div id="chatbox">
-        <p class="botText"><span>Hi! I'm Chatterbot.</span></p>
-      </div>
+      <div class="chatbox">
+        <div class="chatlogs">
+     
       {% for i in chat %}
 
         {% if i["speaker"] == "user" %}
-        <p class="userText"><span> {{i["chat"]}} </span></p>
+        <div class="chat friend">
+        <div class="user-photo"></div>
+          <p class="chat-message">{{i["chat"]}}</p>
+        </div>
         {% endif %}
         
         {% if i["speaker"] == "bot" %}
-        <p class="botText"> <span> {{i["chat"]}} </span></p>
+        <div class="chat self">
+         <div class="user-photo"><img src="nature.jpg"></div>
+          <p class="chat-message">{{i["chat"]}}</p>
+        </div>
         {% endif %}
       
       {% endfor %}
+    </div>
+    <div class="chat-form">
 
-      <form action="{{ url_for('form') }}" method="POST">
-      <div id="userInput">
+      <form class="chat-form" action="{{ url_for('form') }}" method="POST">
         <input id="textInput" type="text" name="text" placeholder="Message">
         <input id="buttonInput" type="submit" value="Send">
-      </div>
+    </div>
       </form>
+ 
     </div>
   </body>
 </html>
