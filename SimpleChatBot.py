@@ -34,7 +34,7 @@ def greeting_check(input_text):
     input_text = preprocessing(input_text) 
     greeting=list(input_text.split())
     for i in range(len(greeting)):
-        if greeting[i].lower() in ['hello', 'hi', 'hey', 'supp']:
+        if greeting[i].lower() in ['hello', 'hi', 'hey', 'supp', 'heya', 'nihao']:
             return True
     return False
 
@@ -46,18 +46,30 @@ def medical_check(input_text):
             return True
     return False
 
+def farewell_check(input_text):
+    input_text=preprocessing(input_text)
+    input_text=list(input_text.split())
+    for i in range(len(input_text)):
+        if input_text[i].lower() in ['thank', 'thanks', 'thk']:
+            return True
+        elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye']:
+            return True
+        else:
+            return False
+
+
 def get_bot_response(input_text):
     global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
     if medical_check(input_text): #function
         MedicalFlag = True
-        return "Do you want to retrieve existing or update?"
+        return "Wah, you want me to get existing records or update the records?"
     elif MedicalFlag == True:
         if input_text == "retrieve":
             RetrieveRecordsFlag = True
-            return "Retrieving records now :)"
+            return "Wait ah, taking records now. :)"
         elif input_text == "update":
             UpdateRecordsFlag = True
-            return "Tell me your sugar level"
+            return "Tell me your sugar level, so I can check if you're healthy ah."
 
     if UpdateRecordsFlag:
         UpdateRecordsFlag = False
@@ -67,17 +79,14 @@ def get_bot_response(input_text):
                 raise ValueError
             if  value > 6.0 and  value < 4.0:
                 ReminderFlag = True
-                return "Value saved.You are at: MEDIUM risk. Consult a medical professional. One of the ways to fight high sugar level is to drink appropriate amounts of water. Do you want me to remind you to do so?"
+                return "I take down liao. You are at MEDIUM risk, quite concern, go see doctor soon."
             elif value>=11.0 or value<=2.8:
                 ReminderFlag = True
-                return "Value saved.You are at: HIGH risk. Please seek medical attention.One of the ways to fight high sugar level is to drink appropriate amounts of water. Do you want me to remind you to do so?"
-            return "Value saved.You are at: NO risk. Keep it up!"
+                return "I take down liao. You are at HIGH risk, alamak, you need to go see doctor now!"
+            return "I take down liao. You are at NO risk. Healthy sia!"
         except:
-            return "Ermm I don't understand, please enter a valid value"
+            return "I dunno what you're talking about, please enter sugar level number."
 
-    if ReminderFlag:
-        
-        
     if greeting_check(input_text):
         greeting_file=open("Greetings.txt", "r")
         lst_greet=[]
@@ -86,7 +95,24 @@ def get_bot_response(input_text):
         greeting_file.close()
         return random.choice(lst_greet)
     else:
-        return "I don't understand"
+        return "I dunno what you're saying, try something like: " + random.choice(lst_greet)
+
+    if farewell_check(input_text):
+        goodbye_file=open("singlish_goodbyes.txt", "r")
+        goodbye=[]
+        for line in goodbye_file:
+            goodbye.append((''.join(line.strip('\n').split('\n'))))
+        goodbye_file.close()
+        input_text=list(input_text.split())
+        for i in range(len(input_text)):
+            if input_text[i].lower() in ['thank', 'thanks', 'thk', 'thks', 'tq', 'ty']:
+                return random.choice(['Thank you ah!', 'Thanks ah!', 'No problem!'])
+            elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye', 'ttyl', 'bai']:
+                return random.choice(goodbye)
+            else:
+                return "I dunno what you're saying, try saying something again bah.
+
+
 
 def create_db():
     db = get_db()

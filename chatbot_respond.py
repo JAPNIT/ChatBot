@@ -1,7 +1,7 @@
 import nltk, string, random
 
 #initialise
-user_respond="I got a reading of 0."
+user_respond="thanks a lot!!"
 
 #noise reduction/expression removal like "lah" and punctuation removal
 def preprocessing(input_text):
@@ -90,8 +90,21 @@ def check_blood_sugar(input_text):
                 return "You are at: HIGH risk. Please seek medical attention."
             return "You are at: NO risk. Keep it up!"
         
-print(check_blood_sugar(user_respond))    
-
+def farewell_check(input_text):
+    input_text=preprocessing(input_text)
+    goodbye_file=open("singlish_goodbyes.txt", "r")
+    goodbye=[]
+    for line in goodbye_file:
+        goodbye.append((''.join(line.strip('\n').split('\n'))))
+    goodbye_file.close()
+    input_text=list(input_text.split())
+    for i in range(len(input_text)):
+        if input_text[i].lower() in ['thank', 'thanks', 'thk']:
+            return random.choice(['Thank you ah!', 'Thanks ah!', 'No problem!'])
+        elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye']:
+            return random.choice(goodbye)
+        else:
+            return "I dunno what you're saying, try saying something again bah."
     
-
+print(farewell_check(user_respond))
 
