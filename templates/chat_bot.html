@@ -8,6 +8,12 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+      .bot {
+        background-color: hsl(0, 0%, 90%);
+        height: 700px;
+      }
+    </style>
 </head>
 <body>
 
@@ -15,6 +21,11 @@
   <div class="chatbox">
     <div class="chatlogs">
       
+      <div class="chat friend">
+          <p class="chat-message">Hello! I very friendly lah, come talk to me :)</p>
+        </div>
+
+
       {% for i in chat %}
 
         {% if i["speaker"] == "user" %}
@@ -25,7 +36,6 @@
 
         {% if i["speaker"] == "bot" %}
         <div class="chat friend">
-         <div class="user-photo"><img src="nature.jpg"></div>
           <p class="chat-message">{{i["chat"]}}</p>
         </div>
         {% endif %}
@@ -43,6 +53,7 @@
       </div>
     </form>
   </div>
+
   <div class="chat-form2">
     <form action="{{ url_for('form') }}" method="POST">
       <div id="userInput">
@@ -66,18 +77,18 @@ $('html, body').animate({
 });
 
 $(".buttonInput2").on("click", function(e) {
-$("#textInput').val("Update");
-$("form").submit();
+$("#textInput").val("Update");
+$("chat-form").submit();
 });
 
 $(".buttonInput3").on("click", function(e) {
-$("#textInput').val("Retrieve");
-$("form").submit();
+$("#textInput").val("Retrieve");
+$("chat-form").submit();
 });
 
 $(".buttonInput4").on("click", function(e) {
-$("#textInput').val("Query");
-$("form").submit();
+$("#textInput").val("Query");
+$("chat-form").submit();
 });
 
 
