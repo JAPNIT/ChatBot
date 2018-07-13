@@ -16,7 +16,6 @@ def preprocessing(input_text):
         words=input_text.translate(translator_punc)
         words = words.split()
         noise_free_words = [word for word in words if word not in stop_words]
-        print(noise_free_words)
         noise_free_text = " ".join(noise_free_words)
         return noise_free_text
 
