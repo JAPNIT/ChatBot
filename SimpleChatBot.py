@@ -104,13 +104,14 @@ def get_bot_response(input_text):
             goodbye.append((''.join(line.strip('\n').split('\n'))))
         goodbye_file.close()
         input_text=list(input_text.split())
+        
         for i in range(len(input_text)):
             if input_text[i].lower() in ['thank', 'thanks', 'thk', 'thks', 'tq', 'ty']:
                 return random.choice(['Thank you ah!', 'Thanks ah!', 'No problem!'])
             elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye', 'ttyl', 'bai']:
                 return random.choice(goodbye)
             else:
-                return "I dunno what you're saying, try saying something again bah.
+                return "I dunno what you're saying, try saying something again bah."
 
 
 

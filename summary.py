@@ -1,8 +1,15 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 from bs4 import BeautifulSoup
-import requests
-import importlib
+import requests, re
+
+links = []
+page = requests.get("https://www.google.dz/search?q=diabetes")
+soup = BeautifulSoup(page.content)
+links = soup.findAll("a")
+for link in soup.find_all("a",href=re.compile("(?<=/url\?q=)(htt.*://.*)")):
+    print (re.split(":(?=http)",link["href"].replace("/url?q=","")))
+
 #https://www.straitstimes.com/politics/stepping-up-the-war-on-diabetes
 def textfromurl(url):
     r = requests.get(url)
@@ -10,7 +17,7 @@ def textfromurl(url):
     text = ' '.join(map(lambda p: p.text, soup.find_all('p')))
     return text
 
-text = textfromurl(input("Enter Url"))
+text = textfromurl(input("Enter Url: "))
 stopWords = set(stopwords.words("english"))
 words = word_tokenize(text)
 freqTable = dict()
