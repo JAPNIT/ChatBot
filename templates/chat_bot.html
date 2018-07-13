@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Medical chatbot</title>
-  	<link rel="stylesheet" type="text/css" href="indexstyle.css">
+  	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='indexstyle.css') }}">
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -43,6 +43,15 @@
       </div>
     </form>
   </div>
+  <div class="chat-form2">
+    <form action="{{ url_for('form') }}" method="POST">
+      <div id="userInput">
+        <input id="buttonInput2" type="submit" value="Update">
+        <input id="buttonInput3" type="submit" value="Retrieve">
+        <input id="buttonInput4" type="submit" value="Query">
+      </div>
+    </form>
+  </div>
 </div>
 </div> 
 
@@ -54,6 +63,21 @@ $('.jumbotron #buttonInput').on('click', function() {
 $('html, body').animate({
   scrollTop: $('.chatbox').offset().top - $('nav').height()
 }, 500);
+});
+
+$(".buttonInput2").on("click", function(e) {
+$("#textInput').val("Update");
+$("form").submit();
+});
+
+$(".buttonInput3").on("click", function(e) {
+$("#textInput').val("Retrieve");
+$("form").submit();
+});
+
+$(".buttonInput4").on("click", function(e) {
+$("#textInput').val("Query");
+$("form").submit();
 });
 
 

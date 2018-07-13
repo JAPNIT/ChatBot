@@ -11,9 +11,9 @@ agent = Agent(
 
 # actions defined in the API.AI console that fire locally when an intent is
 # recognized
-def medical_records(user_input):
-	print ('bweh')
-
+def medical_records(medical):
+        print ('bweh')
+	
 def saveColor(color):
 	print ('do something here')
 
@@ -36,7 +36,8 @@ def main():
 
 		#if an action is deteted, fire the appropriate function
 		if result['action'] == 'medical_records':
-			medical_records(user_input)
+                        print(Flag)
+                        medical_records(user_input)
 		if result['action'] == 'saveColor':
 			saveColor(user_input)
 		if result['action'] == 'createOrder':
