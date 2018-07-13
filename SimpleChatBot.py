@@ -4,8 +4,20 @@ import datetime, time
 from nltk.stem.wordnet import WordNetLemmatizer
 import nltk, string, random
 
-global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
-MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag = False, False, False, False
+from api.ai import Agent
+import json
+
+
+#initialize the agent 
+agent = Agent(
+     'sakd',
+     '04f67374d4b14ed68d9f13f70ddfdca8',
+     '7b62bcd174784e09ab76acc96be378ed',
+)
+
+
+global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, NoRecords
+MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, NoRecords = False, False, False, True
 app = Flask(__name__)
 
 def preprocessing(input_text):
@@ -30,46 +42,12 @@ def preprocessing(input_text):
 
     return new_words
 
-def greeting_check(input_text):
-    input_text = preprocessing(input_text) 
-    greeting=list(input_text.split())
-    for i in range(len(greeting)):
-        if greeting[i].lower() in ['hello', 'hi', 'hey', 'supp', 'heya', 'nihao']:
-            return True
-    return False
-
-def medical_check(input_text):
-    input_text = preprocessing(input_text)
-    input_text=list(input_text.split())
-    for i in range(len(input_text)):
-        if input_text[i].lower() in ['medical', 'records', 'diabetes', 'sugar level', 'med']:
-            return True
-    return False
-
-def farewell_check(input_text):
-    input_text=preprocessing(input_text)
-    input_text=list(input_text.split())
-    for i in range(len(input_text)):
-        if input_text[i].lower() in ['thank', 'thanks', 'thk']:
-            return True
-        elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye']:
-            return True
-        else:
-            return False
-
-
 def get_bot_response(input_text):
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
-    if medical_check(input_text): #function
-        MedicalFlag = True
-        return "Wah, you want me to get existing records or update the records?"
-    elif MedicalFlag == True:
-        if input_text == "retrieve":
-            RetrieveRecordsFlag = True
-            return "Wait ah, taking records now. :)"
-        elif input_text == "update":
-            UpdateRecordsFlag = True
-            return "Tell me your sugar level, so I can check if you're healthy ah."
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag,NoRecords
+    input_text = preprocessing(input_text)
+    response = agent.query(input_text)
+    result = response['result']
+    fulfillment = result['fulfillment']
 
     if UpdateRecordsFlag:
         UpdateRecordsFlag = False
@@ -83,36 +61,16 @@ def get_bot_response(input_text):
             elif value>=11.0 or value<=2.8:
                 ReminderFlag = True
                 return "I take down liao. You are at HIGH risk, alamak, you need to go see doctor now!"
-            return "I take down liao. You are at NO risk. Healthy sia!"
+            else:
+                return "I take down liao. You are at NO risk. Healthy sia!"
         except:
             return "I dunno what you're talking about, please enter sugar level number."
-
-    if greeting_check(input_text):
-        greeting_file=open("Greetings.txt", "r")
-        lst_greet=[]
-        for line in greeting_file:
-            lst_greet.append((''.join(line.strip('\n').split('\n'))))
-        greeting_file.close()
-        return random.choice(lst_greet)
-    else:
-        return "I dunno what you're saying, try something like: " + random.choice(lst_greet)
-
-    if farewell_check(input_text):
-        goodbye_file=open("singlish_goodbyes.txt", "r")
-        goodbye=[]
-        for line in goodbye_file:
-            goodbye.append((''.join(line.strip('\n').split('\n'))))
-        goodbye_file.close()
-        input_text=list(input_text.split())
         
-        for i in range(len(input_text)):
-            if input_text[i].lower() in ['thank', 'thanks', 'thk', 'thks', 'tq', 'ty']:
-                return random.choice(['Thank you ah!', 'Thanks ah!', 'No problem!'])
-            elif input_text[i].lower() in ['bye', 'exit', 'see you', 'later', 'goodbye', 'ttyl', 'bai']:
-                return random.choice(goodbye)
-            else:
-                return "I dunno what you're saying, try saying something again bah."
-
+    if fulfillment['speech'] == "update":
+        UpdateRecordsFlag = True
+    elif fulfillment['speech'] == "retrieve":
+        RetrieveRecordsFlag = True
+    return fulfillment['speech']
 
 
 def create_db():
@@ -131,40 +89,59 @@ def get_db():
 if not os.path.isfile('db.sqlite3'):
     create_db()
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/form', methods=['GET','POST'])
 def form():
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, NoRecords
     if request.method == 'POST':
         db = get_db()
         db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (request.form['text'], time.time(), "user", ))
-        
+
         if UpdateRecordsFlag:
-            now = datetime.datetime.today()
-            date = now.strftime("%d") + "/" + now.strftime("%B") + "/" + now.strftime("%Y")
-            db.execute('INSERT INTO medicalrecords (timestamp, sugarlvl) VALUES (?,?)' , (date, request.form['text']))
-            db.commit()
-            MedicalFlag = False
+            db1 = get_db()
+            val = request.form['text']
+            try:
+                val = float(val)
+                now = datetime.datetime.today()
+                date = now.strftime("%d") + "/" + now.strftime("%B") + "/" + now.strftime("%Y")
+                db1.execute('INSERT INTO medicalrecords (timestamp, sugarlvl) VALUES (?,?)' , (date, request.form['text']))
+                db1.commit()
+                NoRecords = False
+                
+            except:
+                pass
+
+            db1.close()
+
             
         db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (get_bot_response(request.form['text']), time.time(), "bot", ))
         db.commit()
+
         
         if RetrieveRecordsFlag:
+            db1 = get_db()
             medrecords = db.execute('SELECT * FROM medicalrecords').fetchall()
-            for rec in medrecords:
-                text = str(rec["timestamp"]) + ": " + str(rec["sugarlvl"]) + "mmol/L"
-                db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (text, time.time(), "bot", ))
-                db.commit()
+            if NoRecords:
+                db1.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', ("Sorry, no records found ah", time.time(), "bot", ))
+                db1.commit()
+            else:
+                for rec in medrecords:
+                    text = str(rec["timestamp"]) + ": " + str(rec["sugarlvl"]) + "mmol/L"
+                    db1.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (text, time.time(), "bot", ))
+                    db1.commit()
             RetrieveRecordsFlag = False
-            MedicalFlag = False
+            db1.close()
+
+            
         records = db.execute('SELECT * FROM chatbot').fetchall()
         db.close()
-        return render_template('index.html', chat = records)
+        return render_template('chat_bot.html', chat = records)
+    
     else:
         medrecords = []
         db = get_db()
         records = db.execute('SELECT * FROM chatbot').fetchall()
         db.close()
-        return render_template('index.html', chat = records)
+        return render_template('chat_bot.html', chat = records)
     
 if __name__ == '__main__':
     app.run(debug=True)
