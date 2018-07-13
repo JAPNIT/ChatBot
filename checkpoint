@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/Japnit/Desktop/ChatBot/model.tflearn"
+all_model_checkpoint_paths: "/Users/Japnit/Desktop/ChatBot/model.tflearn"

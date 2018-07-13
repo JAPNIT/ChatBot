@@ -131,7 +131,7 @@ def get_db():
 if not os.path.isfile('db.sqlite3'):
     create_db()
 
-@app.route('/form', methods=['GET','POST'])
+@app.route('/', methods=['GET','POST'])
 def form():
     global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, ReminderFlag
     if request.method == 'POST':
@@ -158,13 +158,13 @@ def form():
             MedicalFlag = False
         records = db.execute('SELECT * FROM chatbot').fetchall()
         db.close()
-        return render_template('form.html', chat = records)
+        return render_template('index.html', chat = records)
     else:
         medrecords = []
         db = get_db()
         records = db.execute('SELECT * FROM chatbot').fetchall()
         db.close()
-        return render_template('form.html', chat = records)
+        return render_template('index.html', chat = records)
     
 if __name__ == '__main__':
     app.run(debug=True)
