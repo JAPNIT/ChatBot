@@ -1,47 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: tahoma, sans-serif;
+    box-sizing: border-box;
+}
+
 body {
-  background-color: hsl(0, 0%, 90%); 
-}
-
-.jumbotron {
-  background: rgb(0, 0, 54);
-  width: 100%;
-  height: 650px;
-}
-
-.jumbotron img {
-  border-radius: 25px;
-  padding-top: 30px;
-  height: 400px;
-  width: 40%;
-}
-    
-
-.jumbotron input[type=submit] {
-  background-color: rgba(255, 99, 71, 0.8);
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 50px;
-}
-
-.bot {
-  background-color: hsl(0, 0%, 90%);
+    background: #1ddced;
 }
 
 .chatbox {
-    background-color: white ;
-    width: 400px;
+    width: 500px;
     min-width: 390px;
     height: 600px;
+    background: #fff;
     padding: 25px;
     margin: 20px auto;
-    border-radius: 25px;
+    box-shadow: 0 3px #ccc;
 }
 
 .chatlogs {
@@ -68,42 +43,33 @@ body {
 }   
 
 .chat .user-photo {
-    width: 50px;
-    max-width: none;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background: #ccc;
     border-radius: 50%;
     overflow: hidden;
-    margin: 10px 0;
 }
 
 .chat .user-photo img {
     width: 100%;
 }
 
-.chat.self {
-  justify-content: flex-end;
-}
-
 .chat .chat-message {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-    margin: 10px 10px 0;
+    width: 80%;
+    padding: 15px;
+    margin: 5px 10px 0;
     border-radius: 10px;
     color: #fff;
     font-size: 20px;
-    max-width: 80%;
 }
 
 .friend .chat-message {
-    background: hsl(0, 0%, 40%);
+    background: #1adda4;
 }
 
 .self .chat-message {
-    background: #8e68ad;
+    background: #1ddced;
+    order: -1;
 }
 
 .chat-form {
@@ -114,11 +80,10 @@ body {
 
 .chat-form input[type=text] {
     background: #fbfbfb;
-    width: 256px;
+    width: 75%;
     height: 50px;
     border: 2px solid #eee;
-    border-radius: 25px;
-    border-style: groove;
+    border-radius: 3px;
     resize: none;
     padding: 10px;
     font-size: 18px;
@@ -139,15 +104,16 @@ body {
 }
 
 .chat-form input[type=submit] {
-    background: hsl(0, 0%, 30%);
+    background: #1ddced;
     padding: 5px 15px;
-    font-size: 25px;
+    font-size: 30px;
     color: #fff;
     border: none;
+    margin: 0 10px;
     border-radius: 3px;
+    box-shadow: 0 3px 0 #0eb2c1;
     cursor: pointer;
-
-
+ 
     -webkit-transition: background .2s ease;
     -moz-transition: background .2s ease;
     -o-transition: background .2s ease;
@@ -156,4 +122,9 @@ body {
 .chat-form input[type=submit]:hover {
     background: #13c8d9;
 
+
+
+    
+
+    
 
