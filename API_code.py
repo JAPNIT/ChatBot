@@ -11,7 +11,7 @@ agent = Agent(
 
 # actions defined in the API.AI console that fire locally when an intent is
 # recognized
-def medical_records(medical):
+def medical_records(user_input):
 	print ('bweh')
 
 def saveColor(color):
