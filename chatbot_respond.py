@@ -1,7 +1,7 @@
 import nltk, string, random
 
 #initialise
-user_respond="thanks a lot!!"
+user_respond="What a party pooper! There wasn't much at the party."
 
 #noise reduction/expression removal like "lah" and punctuation removal
 def preprocessing(input_text):
@@ -55,6 +55,27 @@ def preprocessing(input_text):
     new_words= ''.join(word_result)
     return new_words
 
+def topic_modelling(input_text):
+    doc_complete = [input_text]
+    doc_clean = [doc.split() for doc in doc_complete]
+
+    from gensim import corpora
+    import gensim
+    
+    # Creating the term dictionary of our corpus, where every unique term is assigned an index.  
+    dictionary = corpora.Dictionary(doc_clean)
+
+    # Converting list of documents (corpus) into Document Term Matrix using dictionary prepared above. 
+    doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]
+
+    # Creating the object for LDA model using gensim library
+    Lda = gensim.models.ldamodel.LdaModel
+
+    # Running and Training LDA model on the document term matrix
+    ldamodel = Lda(doc_term_matrix, num_topics=1, id2word = dictionary, passes=50)
+
+    # Results 
+    print(ldamodel.print_topics(num_topics=1, num_words=3))
 #greeting check? 
 def greeting_check(input_text):
     input_text = preprocessing(input_text) 
@@ -114,5 +135,5 @@ if datetime.date.today().strftime('%A') == 'Friday':
     if datetime.now().strftime('%H:%M')=='14:44':
         print('Time to take your medication sia!')
 
-print(preprocessing("Shiok ah!"))
+print(topic_modelling(preprocessing(user_respond)))
 

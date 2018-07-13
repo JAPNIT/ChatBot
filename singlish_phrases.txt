@@ -1,37 +1,49 @@
-abuden, obviously
-alamak, oh no
-aiyah, oh dear
-aiyo, oh no
-balik, go home
-beng, gangster
-blur, clueless
-buaya, womanizer
-buay, cannot
-bodoh, idiot
-chao, playing foul
-cheena, chinese
-chio, pretty
-dey, hey
-eye-power, contributing nothing
-encik, mister
-eeyer, disgusting
-gone-case, doomed
-garang, fierce
-gostan, reverse
-guai, good
-liao, done
-jiak, eat
-jia lat, terrible
-kena, afflicted with
-kiasu, afriad of losing
-kopi, coffee
-makan, to eat
-mug, to study
-mata, police
-orh, yes
-pasar, flea market
-paiseh, self-conscious
-shiok, satisfied
-tio, to get
-yah lor, yes
-wah seh, wow
+abuden,obviously
+alamak,oh no
+aiyah,oh dear
+aiyo,oh no
+balik,go home
+beng,gangster
+blur,clueless
+blur like sotong,clueless
+buaya,womanizer
+buay,cannot
+bodoh,idiot
+bojio,you did not call me up
+chao,playing foul
+cheena,chinese
+chio-bu,pretty girl
+come i clap for you,sarcastically impressed
+dey,hey
+die already,in deep trouble
+eye-power,contributing nothing
+encik,mister
+eeyer,disgusting
+hong gan,in deep trouble
+gone-case,doomed
+garang,fierce
+gostan,reverse
+guai,good
+liao,done
+lepak,loiter
+jiak,eat
+jia lat,terrible
+kena,afflicted with
+kenasai,frustrated
+kiasu,afriad of losing
+kopi,coffee
+makan,to eat
+mug,to study
+mata,police
+orh,yes
+pasar,flea market
+paiseh,self-conscious
+shiok,satisfied
+sabo,delierately harm
+sia la,oh my god
+simi sai,what
+tio,to get
+tahan,withstand
+yah lor,yes
+wah seh,wow
+walao,dissatisfied
