@@ -90,6 +90,39 @@
   </div>
 </div>
 
+<script>
+
+$('.jumbotron #buttonInput').on('click', function() {
+$('html, body').animate({
+  scrollTop: $('.chatbox').offset().top - $('nav').height()
+}, 500);
+});
+</script>
+
+var chatbox = document.
+querySelector(".chatlogs");
+
+chatbox.scrollTop = chatbox.
+scrollHeight;
+
+<script>
+
+$('.chat-form').on('submit', function(e) {
+e.preventDefault();
+var $el = $(this);
+$.ajax({
+    type: "POST",
+    url: $el.attr('action'),
+    data: $el.serialize(),
+    success: function(data) {
+        var html = $.parseHTML(data);
+        var k = $(html[0]).find('.chatlogs').html();
+        //*If nothing else, just this next line*//
+        $('.chatlogs').html(k).scrollTop($('.chatlogs')[0].scrollHeight);
+    }
+});
+});
+</script>
 </body>
 </html>
   

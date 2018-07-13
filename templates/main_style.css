@@ -78,6 +78,10 @@ body {
     width: 100%;
 }
 
+.chat.self {
+  justify-content: flex-end;
+}
+
 .chat .chat-message {
     display: flex;
     justify-content: space-around;
