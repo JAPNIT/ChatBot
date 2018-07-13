@@ -5,18 +5,19 @@ user_respond="thanks a lot!!"
 
 #noise reduction/expression removal like "lah" and punctuation removal
 def preprocessing(input_text):
-    lst_stop_words=open("stop_words_and_singlish.txt", "r")
-    stop_words=[]
-    for line in lst_stop_words:
-        stop_words.append(''.join(line.strip().split("\n")))
-    lst_stop_words.close()
 
     def _remove_noise(input_text):
-        words = input_text.split() 
-        noise_free_words = [word for word in words if word not in stop_words] 
-        noise_free_text = " ".join(noise_free_words)
+        lst_stop_words=open("stop_words_and_singlish.txt", "r")
+        stop_words=[]
+        for line in lst_stop_words:
+            stop_words.append(''.join(line.strip().split("\n")))
+        lst_stop_words.close()
         translator_punc=str.maketrans('','', string.punctuation)
-        noise_free_text=noise_free_text.translate(translator_punc)
+        words=input_text.translate(translator_punc)
+        words = words.split()
+        noise_free_words = [word for word in words if word not in stop_words]
+        print(noise_free_words)
+        noise_free_text = " ".join(noise_free_words)
         return noise_free_text
 
     words=(_remove_noise(input_text))
@@ -106,5 +107,13 @@ def farewell_check(input_text):
         else:
             return "I dunno what you're saying, try saying something again bah."
     
-print(farewell_check(user_respond))
+
+
+import datetime
+if datetime.date.today().strftime('%A') == 'Friday':
+    from datetime import datetime
+    if datetime.now().strftime('%H:%M')=='14:44':
+        print('Time to take your medication sia!')
+
+print(preprocessing("Shiok ah!"))
 

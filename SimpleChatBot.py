@@ -15,11 +15,11 @@ def preprocessing(input_text):
         stop_words.append(''.join(line.strip().split("\n")))
     lst_stop_words.close()
 
-    words = input_text.split() 
+    translator_punc=str.maketrans('','', string.punctuation)
+    words=input_text.translate(translator_punc)
+    words = words.split() 
     noise_free_words = [word for word in words if word not in stop_words] 
     noise_free_text = " ".join(noise_free_words)
-    translator_punc=str.maketrans('','', string.punctuation)
-    noise_free_text=noise_free_text.translate(translator_punc)
 
     word_result = []
     lem = WordNetLemmatizer()
