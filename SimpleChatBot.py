@@ -3,9 +3,9 @@ import os.path, sqlite3
 import datetime, time
 from nltk.stem.wordnet import WordNetLemmatizer
 import nltk, string, random
-
 from api.ai import Agent
 import json
+from summary import summary
 
 
 #initialize the agent 
@@ -17,7 +17,7 @@ agent = Agent(
 
 
 global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
-MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag = False, False, False
+MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag,NoRecords = False, False, False, True
 app = Flask(__name__)
 
 def preprocessing(input_text):
@@ -62,7 +62,7 @@ def preprocessing(input_text):
     return new_words
 
 def get_bot_response(input_text):
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag,NoRecords
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, NoRecords
 
     if UpdateRecordsFlag:
         UpdateRecordsFlag = False
@@ -80,19 +80,22 @@ def get_bot_response(input_text):
                 return "I take down liao. You are at NO risk. Healthy sia!"
         except:
             return "I dunno what you're talking about, please enter a valid sugar level."
-        
+
     input_text = preprocessing(input_text)
     response = agent.query(input_text)
-    try:
-        result = response['result']
-    except:
-        return "I don't know what you are saying."
+
+    result = response['result']
+
     fulfillment = result['fulfillment']
     
+    
+
     if fulfillment['speech'] == "Tell me your sugar level":
         UpdateRecordsFlag = True
     elif fulfillment['speech'] == "Retrieving records now ah":
         RetrieveRecordsFlag = True
+    elif fulfillment['speech'] == "There you go!":
+        return summary(input_text)
     return fulfillment['speech']
 
 
@@ -114,10 +117,10 @@ if not os.path.isfile('db.sqlite3'):
 
 @app.route('/form', methods=['GET','POST'])
 def form():
-    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag
+    global MedicalFlag, RetrieveRecordsFlag, UpdateRecordsFlag, NoRecords
     if request.method == 'POST':
         db = get_db()
-        db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (request.form['text'], time.time(), "user", ))
+        db.execute('INSERT INTO chatbot (chat, timestamp, speaker) VALUES (?, ?, ?)', (request.form['text'], time.time(), "user", ))           
 
         if UpdateRecordsFlag:
             db = get_db()
@@ -146,8 +149,6 @@ def form():
                     db.commit()
             RetrieveRecordsFlag = False
  
-
-            
         records = db.execute('SELECT * FROM chatbot').fetchall()
 
         return render_template('chat_bot.html', chat = records)
